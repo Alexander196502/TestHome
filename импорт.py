@@ -1,0 +1,1 @@
+from декораторы import etalon
