@@ -277,12 +277,12 @@ class BookingApp:
             self.canvas.create_text(15, y, text=row, font=('Arial', 10, 'bold'))
 
     def update_stats(self):
-        total = len(self.seats)
+        total1 = len(self.seats)
         booked = sum(1 for status in self.seats.values() if status == 'забронировано')
-        free = total - booked
+        free = total1 - booked
 
         self.stats_label.config(
-            text=f"📊 Статистика: Всего мест: {total} | Свободно: {free} | Забронировано: {booked}",
+            text=f"📊 Статистика: Всего мест: {total1} | Свободно: {free} | Забронировано: {booked}",
             fg='blue' if free > 0 else 'red'
         )
 
