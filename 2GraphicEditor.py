@@ -9,7 +9,7 @@ from PIL import Image, ImageTk, ImageGrab
 # Импорт модуля stepic для стеганографии (встраивание данных в изображения)
 import stepic
 
-# Глобальные переменные
+# Задаю Глобальные переменные
 pen_color = "black"  # Начальный цвет пера
 pen_width = 5  # Начальная толщина пера (в пикселях)
 
@@ -25,20 +25,25 @@ def draw(event):
                       x + pen_width//2, y + pen_width//2,
                       fill=pen_color, outline=pen_color)
 
+# Функция установки цвета пера
+def set_pen_color(color):
+    global pen_color
+    pen_color = color
+
 # Функция для обновления толщины пера из поля ввода
 def update_pen_width():
     global pen_width  # Объявляем, что будем изменять глобальную переменную
     try:
-        # Пытаемся преобразовать введенное значение в целое число
+        # Преобразовать введенное значение в целое число
         new_width = int(width_entry.get())
         # Проверяем, что толщина положительная (больше 0)
         if new_width > 0:
             pen_width = new_width  # Устанавливаем новую толщину
             # Показываем информационное сообщение об успешном изменении
-            mb.showinfo("Успешно", f"Толщина пера установлена на {pen_width}")
+            mb.showinfo("Обновлена толщины пера", f"Толщина пера установлена на {pen_width}")
         else:
             # Выводим ошибку, если толщина <= 0
-            mb.showerror("Ошибка", "Толщина должна быть положительным числом")
+            mb.showerror("Ошибка", "Толщина должна быть задана положительным числом")
     except ValueError:
         # Обработка исключения, если введено не целое число
         mb.showerror("Ошибка", "Пожалуйста, введите целое положительное число")
@@ -67,7 +72,7 @@ def save_canvas():
                                                   ('JPEG files', '*.jpg'),
                                                   ('All files', '*.*')])
         if file_path:  # Если путь сохранения выбран
-            # Получаем координаты холста на экране
+            # Координаты холста на экране
             x = window.winfo_rootx() + canvas.winfo_x()
             y = window.winfo_rooty() + canvas.winfo_y()
             x1 = x + canvas.winfo_width()   # Правая граница
@@ -121,10 +126,10 @@ colors = ["red", "green", "blue", "black", "yellow", "purple", "orange"]
 for color in colors:
     # Создаем цветную метку для каждого цвета
     lbl = Label(color_frame, text="", bg=color, width=3, height=1, relief=RAISED, bd=2)
-    lbl.pack(side=LEFT, padx=2)  # Размещаем слева с отступом
+    lbl.pack(side=LEFT,fill=X, pady=5)  # Размещаем слева с отступом
     # Привязываем событие клика для установки цвета пера
-    # Используем lambda с захватом значения color, globals().update() изменяет глобальную переменную
-    lbl.bind("<Button-1>", lambda e, c=color: globals().update(pen_color=c))
+    # Используем функцию-обертку set_pen_color вместо лямбды
+    lbl.bind("<Button-1>", lambda e, c=color: set_pen_color(c))
 
 # Фрейм для настройки толщины пера
 width_frame = Frame(toolbar, bg="lightgray")
